@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tìm bí mật của HĐKhoa</title>
+  <style>
+    :root {
+      --bg-1: #07111f;
+      --bg-2: #0f2341;
+      --panel: rgba(10, 18, 34, 0.85);
+      --panel-strong: rgba(9, 15, 27, 0.92);
+      --line: rgba(164, 223, 255, 0.18);
+      --text: #ebf7ff;
+      --muted: #98b7cf;
+      --accent: #67e8f9;
+      --accent-2: #f59e0b;
+      --good: #22c55e;
+      --bad: #fb7185;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(103, 232, 249, 0.18), transparent 28%),
+        radial-gradient(circle at 80% 15%, rgba(245, 158, 11, 0.16), transparent 18%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    body::before {
+      top: -80px;
+      left: -100px;
+      background: #2dd4bf;
+    }
+
+    body::after {
+      right: -80px;
+      bottom: -120px;
+      background: #f59e0b;
+    }
+
+    .shell {
+      width: min(1100px, calc(100% - 32px));
+      margin: 32px auto;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 24px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .sidebar {
+      padding: 24px;
+      position: sticky;
+      top: 24px;
+      height: fit-content;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(103, 232, 249, 0.25), rgba(245, 158, 11, 0.25));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 0.04em;
+    }
+
+    .subtitle,
+    .desc,
+    .hint,
+    .meta {
+      color: var(--muted);
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      font-size: 0.94rem;
+    }
+
+    .desc {
+      line-height: 1.6;
+      margin: 18px 0 22px;
+    }
+
+    .progress-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .progress-line {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 14px;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.35s ease;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid transparent;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .check-item.done {
+      border-color: rgba(74, 222, 128, 0.25);
+      color: var(--text);
+      background: rgba(74, 222, 128, 0.08);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+      flex: 0 0 auto;
+    }
+
+    .main {
+      padding: 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: #ecfeff;
+      background: rgba(103, 232, 249, 0.12);
+      border: 1px solid rgba(103, 232, 249, 0.18);
+      font-size: 0.88rem;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 4vw, 3.7rem);
+      line-height: 1.02;
+    }
+
+    .hero-copy {
+      margin: 0 0 28px;
+      max-width: 760px;
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: #c7dcec;
+    }
+
+    .question-card,
+    .password-card,
+    .secret-card {
+      padding: 22px;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .question-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .password-card {
+      margin-bottom: 24px;
+    }
+
+    .password-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .password-input {
+      flex: 1 1 260px;
+      min-width: 0;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      outline: none;
+    }
+
+    .password-input:focus {
+      border-color: rgba(103, 232, 249, 0.38);
+      box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.12);
+    }
+
+    .password-feedback {
+      min-height: 24px;
+      margin-top: 12px;
+      font-weight: 600;
+    }
+
+    .password-feedback.good {
+      color: var(--good);
+    }
+
+    .password-feedback.bad {
+      color: var(--bad);
+    }
+
+    .key-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #7dd3fc;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .key-link:hover {
+      text-decoration: underline;
+    }
+
+    .key-box {
+      display: none;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .key-box.show {
+      display: block;
+    }
+
+    .security-wall {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(103, 232, 249, 0.12);
+    }
+
+    .security-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .security-pill {
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(74, 222, 128, 0.25);
+      background: rgba(74, 222, 128, 0.08);
+      color: #dcfce7;
+      font-weight: 700;
+    }
+
+    .security-pill.alert {
+      border-color: rgba(251, 113, 133, 0.25);
+      background: rgba(251, 113, 133, 0.1);
+      color: #ffe4e6;
+    }
+
+    .q-index {
+      font-size: 0.96rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .difficulty {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.12);
+      color: #fde68a;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      font-size: 0.85rem;
+    }
+
+    .question-title {
+      margin: 0 0 14px;
+      font-size: 1.3rem;
+      line-height: 1.45;
+    }
+
+    .question-body {
+      color: #d5e7f3;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    pre {
+      margin: 0 0 18px;
+      padding: 18px;
+      overflow: auto;
+      border-radius: 18px;
+      background: #07101c;
+      border: 1px solid rgba(103, 232, 249, 0.14);
+      color: #d9f7ff;
+      font-size: 0.92rem;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .answer {
+      width: 100%;
+      text-align: left;
+      padding: 20px 22px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(255, 255, 255, 0.025);
+      color: var(--text);
+      font-size: 1.08rem;
+      line-height: 1.55;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .answer:hover {
+      transform: translateX(8px);
+      border-color: rgba(103, 232, 249, 0.35);
+      background: rgba(103, 232, 249, 0.08);
+    }
+
+    .answer.correct {
+      border-color: rgba(74, 222, 128, 0.5);
+      background: rgba(74, 222, 128, 0.12);
+    }
+
+    .answer.wrong {
+      border-color: rgba(251, 113, 133, 0.4);
+      background: rgba(251, 113, 133, 0.12);
+    }
+
+    .feedback {
+      min-height: 28px;
+      margin-top: 14px;
+      font-weight: 600;
+    }
+
+    .feedback.good {
+      color: var(--good);
+    }
+
+    .feedback.bad {
+      color: var(--bad);
+    }
+
+    .secret-card {
+      margin-top: 24px;
+      display: none;
+      background:
+        radial-gradient(circle at top right, rgba(103, 232, 249, 0.12), transparent 30%),
+        rgba(9, 15, 27, 0.92);
+      border-color: rgba(103, 232, 249, 0.22);
+    }
+
+    .secret-card.show {
+      display: block;
+      animation: rise 0.45s ease;
+    }
+
+    .secret-title {
+      margin: 0 0 10px;
+      font-size: 1.5rem;
+    }
+
+    .secret-box {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(103, 232, 249, 0.08);
+      border: 1px solid rgba(103, 232, 249, 0.18);
+      color: #e9fdff;
+      line-height: 1.75;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: 0;
+      cursor: pointer;
+      padding: 13px 16px;
+      border-radius: 14px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, rgba(103, 232, 249, 0.22), rgba(245, 158, 11, 0.22));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .button.secondary {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="panel sidebar">
+      <div class="brand">
+        <div class="logo">B</div>
+        <div>
+          <h2 class="title">HĐKhoa</h2>
+          <p class="subtitle">10 câu hỏi cực khó để mở bí mật</p>
+        </div>
+      </div>
+
+      <p class="desc">
+        Chỉ những ai thật sự tỉnh táo mới mở được kho bí mật này. Bạn phải trả lời đúng liên tiếp 10 câu hỏi, trong đó có một câu C++ rất gắt.
+      </p>
+
+      <div class="progress-card">
+        <div class="meta" id="progressText">Đã mở khóa: 0 / 10</div>
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="hint">Trả lời sai thì chỉ cần chọn lại. Trả lời đúng sẽ tự chuyển sang câu tiếp theo.</div>
+      </div>
+
+      <div class="checklist" id="checklist"></div>
+    </aside>
+
+    <main class="panel main">
+      <div class="badge">Secret Challenge Interface</div>
+      <h1>Kho Bí Mật Chỉ Mở Với Người Thật Sự Rất Mạnh</h1>
+      <section class="question-card">
+        <div class="question-top">
+          <div class="q-index" id="questionIndex">Câu 1 / 10</div>
+          <div class="difficulty" id="difficultyLabel">Cực khó</div>
+        </div>
+
+        <h2 class="question-title" id="questionTitle"></h2>
+        <div class="question-body" id="questionBody"></div>
+        <pre id="questionCode" hidden></pre>
+        <div class="answers" id="answers"></div>
+        <div class="feedback" id="feedback"></div>
+      </section>
+
+      <section class="password-card">
+        <h2 class="question-title">Mở khóa bằng mật khẩu</h2>
+        <div class="question-body">
+          Nếu bạn biết mật khẩu bí mật, bạn có thể bỏ qua toàn bộ câu hỏi và xem nội dung ngay lập tức.
+        </div>
+        <div class="password-row">
+          <input class="password-input" id="passwordInput" type="password" placeholder="Nhập mật khẩu để bỏ qua câu hỏi">
+          <button class="button" id="passwordBtn">Mở ngay</button>
+        </div>
+        <a href="#" class="key-link" id="keyLink">Xem nơi bán key</a>
+        <div class="key-box" id="keyBox">
+          Nơi bán key giá 50.000đ.<br>
+          Nhắn qua Zalo: 0975.497.284
+        </div>
+        <div class="password-feedback" id="passwordFeedback"></div>
+        <div class="security-wall">
+          <div class="security-status">
+            <span>Tường lửa bảo vệ đang theo dõi truy cập</span>
+            <span class="security-pill" id="securityPill">SECURE</span>
+          </div>
+          <div class="password-feedback" id="securityLog"></div>
+        </div>
+      </section>
+
+      <section class="secret-card" id="secretCard">
+        <h2 class="secret-title">Bí mật đã được mở</h2>
+        <div class="secret-box">
+          Tao đang thích Thiệu Gia Bảo<br>
+          Chỉ là troll thôi
+        </div>
+        <div class="actions">
+          <button class="button" id="restartBtn">Chơi lại từ đầu</button>
+          <button class="button secondary" id="showAllBtn">Xem lại toàn bộ câu hỏi</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        difficulty: "Logic",
+        title: "Một căn phòng có 3 công tắc ở ngoài và 1 bóng đèn ở trong. Bạn chỉ được vào phòng chứa bóng đèn đúng 1 lần. Làm sao xác định công tắc nào điều khiển bóng?",
+        body: "Chọn phương án đúng nhất.",
+        options: [
+          "Bật từng công tắc rồi nghe âm thanh phát ra từ bóng đèn.",
+          "Bật công tắc 1 vài phút rồi tắt, bật công tắc 2, vào phòng và dùng cả ánh sáng lẫn nhiệt độ bóng đèn để suy ra.",
+          "Bật cả 3 công tắc cùng lúc rồi vào kiểm tra độ sáng.",
+          "Không thể xác định nếu chỉ được vào phòng đúng 1 lần."
+        ],
+        correct: 1
+      },
+      {
+        difficulty: "Toán học",
+        title: "Số nguyên dương nhỏ nhất chia cho 2 dư 1, chia cho 3 dư 2, chia cho 4 dư 3, chia cho 5 dư 4 và chia cho 6 dư 5 là bao nhiêu?",
+        body: "Gợi ý: mọi phép chia đều dư đúng 1 đơn vị ít hơn số chia.",
+        options: ["59", "61", "119", "121"],
+        correct: 1
+      },
+      {
+        difficulty: "Mật mã",
+        title: "Nếu mã hóa Caesar với độ dịch +7, chữ 'GEMINI' sẽ thành gì?",
+        body: "Xem bảng chữ cái tiếng Anh 26 ký tự, xoay sang phải 7 bước.",
+        options: ["NLTPUP", "NLTPUPI", "NLTPTP", "HFNJOJ"],
+        correct: 0
+      },
+      {
+        difficulty: "Thuật toán",
+        title: "Thuật toán nào trong số này có độ phức tạp trung bình O(n log n) nhưng trường hợp xấu nhất có thể là O(n²)?",
+        body: "Chọn đáp án đúng nhất.",
+        options: ["Merge Sort", "Heap Sort", "Quick Sort", "Counting Sort"],
+        correct: 2
+      },
+      {
+        difficulty: "Xác suất",
+        title: "Bạn tung 2 đồng xu công bằng. Xác suất xuất hiện ít nhất 1 mặt ngửa là bao nhiêu?",
+        body: "Hãy nghĩ theo biến cố đối.",
+        options: ["1/4", "1/2", "3/4", "2/3"],
+        correct: 2
+      },
+      {
+        difficulty: "Số học",
+        title: "Ước chung lớn nhất của 840 và 630 là gì?",
+        body: "Một câu tưởng dễ nhưng đang ở giữa bài cực khó.",
+        options: ["70", "105", "210", "420"],
+        correct: 2
+      },
+      {
+        difficulty: "Lý thuyết đồ thị",
+        title: "Một cây có 15 đỉnh thì có bao nhiêu cạnh?",
+        body: "Tính chất cơ bản của tree.",
+        options: ["13", "14", "15", "16"],
+        correct: 1
+      },
+      {
+        difficulty: "C++ (Expert)",
+        title: "Điều gì xảy ra khi bạn gọi std::move() trên một đối tượng được khai báo là 'const'?",
+        body: "Ví dụ: const std::string s = 'data'; auto s2 = std::move(s);",
+        options: [
+          "Đối tượng sẽ được chuyển (move) bình thường sang biến mới.",
+          "Lỗi biên dịch (Compile-time error) vì không thể move đối tượng const.",
+          "Trình biên dịch sẽ thực hiện phép sao chép (copy) thay vì move.",
+          "Chương trình sẽ bị crash (Runtime error) khi cố gắng truy cập vùng nhớ cũ."
+        ],
+        correct: 2
+      },
+      {
+        difficulty: "Suy luận",
+        title: "Nếu mọi A đều là B, mọi B đều là C, thì kết luận nào chắc chắn đúng?",
+        body: "Chọn mệnh đề luôn đúng về mặt logic.",
+        options: [
+          "Mọi C đều là A",
+          "Mọi A đều là C",
+          "Không có B nào là C",
+          "Một số C không phải là B"
+        ],
+        correct: 1
+      },
+      {
+        difficulty: "Bất khả thi",
+        title: "Câu này được ghi là không ai giải được. Vậy đáp án nào là đáp án đúng?",
+        body: "Đây là câu troll. Hãy chọn thật liều.",
+        options: ["Không ai biết", "Không có đáp án đúng", "Đáp án này", "Bỏ cuộc"],
+        correct: 2
+      }
+    ];
+
+    let currentIndex = 0;
+    let bypassUnlocked = false;
+    const solved = new Array(questions.length).fill(false);
+
+    const checklist = document.getElementById("checklist");
+    const progressText = document.getElementById("progressText");
+    const progressFill = document.getElementById("progressFill");
+    const questionIndex = document.getElementById("questionIndex");
+    const difficultyLabel = document.getElementById("difficultyLabel");
+    const questionTitle = document.getElementById("questionTitle");
+    const questionBody = document.getElementById("questionBody");
+    const questionCode = document.getElementById("questionCode");
+    const answers = document.getElementById("answers");
+    const feedback = document.getElementById("feedback");
+    const secretCard = document.getElementById("secretCard");
+    const restartBtn = document.getElementById("restartBtn");
+    const showAllBtn = document.getElementById("showAllBtn");
+    const passwordInput = document.getElementById("passwordInput");
+    const passwordBtn = document.getElementById("passwordBtn");
+    const keyLink = document.getElementById("keyLink");
+    const keyBox = document.getElementById("keyBox");
+    const passwordFeedback = document.getElementById("passwordFeedback");
+    const securityPill = document.getElementById("securityPill");
+    const securityLog = document.getElementById("securityLog");
+    const firewall = {
+      failedPasswordAttempts: 0,
+      failedQuizAttempts: 0,
+      lockedUntil: 0,
+      alert: false
+    };
+
+    function setSecurityState(message, isAlert = false) {
+      firewall.alert = isAlert;
+      securityPill.textContent = isAlert ? "LOCKDOWN" : "SECURE";
+      securityPill.className = isAlert ? "security-pill alert" : "security-pill";
+      securityLog.textContent = message;
+      securityLog.className = isAlert ? "password-feedback bad" : "password-feedback good";
+    }
+
+    function isFirewallLocked() {
+      return Date.now() < firewall.lockedUntil;
+    }
+
+    function getLockSecondsLeft() {
+      return Math.max(0, Math.ceil((firewall.lockedUntil - Date.now()) / 1000));
+    }
+
+    function resetQuizState() {
+      for (let i = 0; i < solved.length; i += 1) {
+        solved[i] = false;
+      }
+      bypassUnlocked = false;
+      currentIndex = 0;
+      updateProgress();
+      renderQuestion();
+    }
+
+    function engageFirewall(reason, durationMs = 30000) {
+      firewall.lockedUntil = Date.now() + durationMs;
+      setSecurityState(`Tường lửa đã khóa hệ thống ${Math.ceil(durationMs / 1000)} giây: ${reason}`, true);
+    }
+
+    function renderChecklist() {
+      checklist.innerHTML = "";
+      questions.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "check-item" + (solved[index] ? " done" : "");
+        row.innerHTML = `<span class="dot"></span><span>Câu ${index + 1}: ${item.difficulty}</span>`;
+        checklist.appendChild(row);
+      });
+    }
+
+    function updateProgress() {
+      const count = solved.filter(Boolean).length;
+      progressText.textContent = `Đã mở khóa: ${count} / ${questions.length}`;
+      progressFill.style.width = `${(count / questions.length) * 100}%`;
+      renderChecklist();
+
+      if (count === questions.length || bypassUnlocked) {
+        secretCard.classList.add("show");
+      } else {
+        secretCard.classList.remove("show");
+      }
+    }
+
+    function concealSecret(reason) {
+      if (secretCard.classList.contains("show")) {
+        secretCard.classList.remove("show");
+        setSecurityState(reason, true);
+      }
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      questionIndex.textContent = `Câu ${currentIndex + 1} / ${questions.length}`;
+      difficultyLabel.textContent = q.difficulty;
+      questionTitle.textContent = q.title;
+      questionBody.textContent = q.body;
+      feedback.textContent = "";
+      feedback.className = "feedback";
+      answers.innerHTML = "";
+
+      if (q.code) {
+        questionCode.hidden = false;
+        questionCode.textContent = q.code;
+      } else {
+        questionCode.hidden = true;
+        questionCode.textContent = "";
+      }
+
+      q.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.className = "answer";
+        button.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
+        button.addEventListener("click", () => handleAnswer(index));
+        answers.appendChild(button);
+      });
+    }
+
+    function handleAnswer(index) {
+      if (isFirewallLocked()) {
+        feedback.textContent = `Tường lửa đang khóa truy cập. Chờ ${getLockSecondsLeft()} giây.`;
+        feedback.className = "feedback bad";
+        return;
+      }
+
+      const q = questions[currentIndex];
+      const buttons = [...document.querySelectorAll(".answer")];
+
+      buttons.forEach((button, buttonIndex) => {
+        button.disabled = true;
+        if (buttonIndex === q.correct) {
+          button.classList.add("correct");
+        }
+        if (buttonIndex === index && index !== q.correct) {
+          button.classList.add("wrong");
+        }
+      });
+
+      if (index === q.correct) {
+        solved[currentIndex] = true;
+        feedback.textContent = "Chính xác. Hệ thống đang mở khóa tầng tiếp theo...";
+        feedback.className = "feedback good";
+        updateProgress();
+
+        if (currentIndex < questions.length - 1) {
+          setTimeout(() => {
+            currentIndex += 1;
+            renderQuestion();
+          }, 800);
+        }
+      } else {
+        firewall.failedQuizAttempts += 1;
+        feedback.textContent = "Chưa đúng. Tường lửa đã ghi nhận một lần truy cập sai.";
+        feedback.className = "feedback bad";
+
+        if (firewall.failedQuizAttempts >= 3) {
+          firewall.failedQuizAttempts = 0;
+          resetQuizState();
+          engageFirewall("quá nhiều lần trả lời sai", 60000);
+          feedback.textContent = "Bạn đã sai quá 3 lần. Trang bị khóa 60 giây và đã bắt đầu lại từ câu 1.";
+          feedback.className = "feedback bad";
+        } else {
+          setSecurityState(`Phát hiện ${firewall.failedQuizAttempts} lần trả lời sai liên tiếp.`, true);
+          setTimeout(() => {
+            renderQuestion();
+          }, 900);
+        }
+      }
+    }
+
+    restartBtn.addEventListener("click", () => {
+      resetQuizState();
+      bypassUnlocked = false;
+      passwordInput.value = "";
+      passwordFeedback.textContent = "";
+      passwordFeedback.className = "password-feedback";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    showAllBtn.addEventListener("click", () => {
+      currentIndex = 0;
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    function unlockByPassword() {
+      if (isFirewallLocked()) {
+        passwordFeedback.textContent = `Tường lửa đang khóa. Thử lại sau ${getLockSecondsLeft()} giây.`;
+        passwordFeedback.className = "password-feedback bad";
+        return;
+      }
+
+      if (passwordInput.value === "AOV_DHjm") {
+        bypassUnlocked = true;
+        firewall.failedPasswordAttempts = 0;
+        firewall.failedQuizAttempts = 0;
+        passwordFeedback.textContent = "Mật khẩu đúng. Bí mật đã được mở ngay.";
+        passwordFeedback.className = "password-feedback good";
+        setSecurityState("Xác thực thành công. Tường lửa cho phép truy cập bí mật.");
+        updateProgress();
+        secretCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        firewall.failedPasswordAttempts += 1;
+        passwordFeedback.textContent = "Mật khẩu chưa đúng.";
+        passwordFeedback.className = "password-feedback bad";
+
+        if (firewall.failedPasswordAttempts >= 5) {
+          firewall.failedPasswordAttempts = 0;
+          engageFirewall("thử mật khẩu sai quá nhiều lần");
+        } else {
+          setSecurityState(`Tường lửa ghi nhận ${firewall.failedPasswordAttempts} lần thử mật khẩu sai.`, true);
+        }
+      }
+    }
+
+    passwordBtn.addEventListener("click", unlockByPassword);
+    passwordInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        unlockByPassword();
+      }
+    });
+
+    keyLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      keyBox.classList.toggle("show");
+    });
+
+    document.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      setSecurityState("Chuột phải đã bị chặn bởi tường lửa.", true);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+      const blockedShortcut =
+        key === "f12" ||
+        key === "printscreen" ||
+        (event.metaKey && event.shiftKey && ["3", "4"].includes(key)) ||
+        (event.ctrlKey && event.shiftKey && ["i", "j", "c"].includes(key)) ||
+        ((event.ctrlKey || event.metaKey) && ["u", "s", "c", "x", "v", "a", "p"].includes(key));
+
+      if (blockedShortcut) {
+        event.preventDefault();
+        setSecurityState("Phát hiện tổ hợp phím bị tường lửa chặn.", true);
+        concealSecret("Bí mật đã bị che do phát hiện tổ hợp phím nhạy cảm.");
+      }
+    });
+
+    ["copy", "cut", "paste", "selectstart", "dragstart"].forEach((eventName) => {
+      document.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        setSecurityState(`Tường lửa đã chặn thao tác ${eventName}.`, true);
+        concealSecret("Bí mật đã bị che do phát hiện thao tác sao chép.");
+      });
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        concealSecret("Bí mật đã bị che khi trang bị ẩn hoặc chuyển ứng dụng.");
+      }
+    });
+
+    window.addEventListener("blur", () => {
+      concealSecret("Bí mật đã bị che khi cửa sổ mất focus.");
+    });
+
+    setSecurityState("Tường lửa siêu bảo mật đang hoạt động bình thường.");
+    updateProgress();
+    renderQuestion();
+  </script>
+</body>
+</html>
