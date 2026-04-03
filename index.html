@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tìm bí mật của HĐKhoa</title>
+  <title>Tìm crush của HĐKhoa 6A3</title>
   <style>
     :root {
       --bg-1: #07111f;
@@ -95,14 +95,14 @@
     }
 
     .logo {
-      width: 54px;
-      height: 54px;
+      width: 74px;
+      height: 74px;
       display: grid;
       place-items: center;
       border-radius: 18px;
       background: linear-gradient(135deg, rgba(103, 232, 249, 0.25), rgba(245, 158, 11, 0.25));
       border: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 24px;
+      font-size: 36px;
       font-weight: 800;
     }
 
@@ -285,6 +285,79 @@
       text-decoration: underline;
     }
 
+    .secret-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: #7dd3fc;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .secret-link:hover {
+      text-decoration: underline;
+    }
+
+    .secret-proof {
+      display: none;
+      margin-top: 12px;
+      color: #c7f9cc;
+      font-weight: 700;
+    }
+
+    .secret-proof.show {
+      display: block;
+    }
+
+    .truth-page {
+      display: none;
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.22);
+    }
+
+    .truth-page.show {
+      display: block;
+    }
+
+    .truth-panel {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .truth-panel.show {
+      display: block;
+    }
+
+    .truth-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .truth-input {
+      flex: 1 1 220px;
+      min-width: 0;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      outline: none;
+    }
+
+    .truth-feedback {
+      min-height: 22px;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
     .key-box {
       display: none;
       margin-top: 14px;
@@ -298,6 +371,51 @@
 
     .key-box.show {
       display: block;
+    }
+
+    .toast-stack {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 9999;
+      display: grid;
+      gap: 10px;
+      width: min(360px, calc(100vw - 24px));
+      pointer-events: none;
+    }
+
+    .toast {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(9, 15, 27, 0.94);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      animation: toast-in 0.22s ease;
+    }
+
+    .toast.good {
+      border-color: rgba(34, 197, 94, 0.35);
+    }
+
+    .toast.bad {
+      border-color: rgba(251, 113, 133, 0.35);
+    }
+
+    .toast.info {
+      border-color: rgba(103, 232, 249, 0.28);
+    }
+
+    @keyframes toast-in {
+      from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .security-wall {
@@ -494,13 +612,15 @@
   </style>
 </head>
 <body>
+  <div class="toast-stack" id="toastStack"></div>
   <div class="shell">
     <aside class="panel sidebar">
       <div class="brand">
-        <div class="logo">B</div>
+        <div class="logo">K</div>
         <div>
           <h2 class="title">HĐKhoa</h2>
-          <p class="subtitle">10 câu hỏi cực khó để mở bí mật</p>
+          <p class="subtitle">10 câu hỏi cực khó để xem crush của HĐKhoa 6A3 là ai?</p>
+          </p>
         </div>
       </div>
 
@@ -546,7 +666,7 @@
         </div>
         <a href="#" class="key-link" id="keyLink">Xem nơi bán key</a>
         <div class="key-box" id="keyBox">
-          Nơi bán key giá 50.000đ.<br>
+          Nơi bán key giá: 50.000đ.<br>
           Nhắn qua Zalo: 0975.497.284
         </div>
         <div class="password-feedback" id="passwordFeedback"></div>
@@ -562,8 +682,23 @@
       <section class="secret-card" id="secretCard">
         <h2 class="secret-title">Bí mật đã được mở</h2>
         <div class="secret-box">
-          Tao đang thích Thiệu Gia Bảo<br>
-          Chỉ là troll thôi
+          Tao đang thích Thiệu Gia Bảo 6A5.<br>
+          Chỉ là troll thôi!
+          <br>
+          <a href="#" class="secret-link" id="truthLink">Xem xác nhận bí mật</a>
+          <div class="truth-panel" id="truthPanel">
+            <div>Nhập mật khẩu để xem xác nhận thật:</div>
+            <div class="truth-row">
+              <input class="truth-input" id="truthInput" type="password" placeholder="Nhập mật khẩu xác nhận">
+              <button class="button secondary" id="truthBtn">Xác nhận</button>
+            </div>
+            <div class="truth-feedback" id="truthFeedback"></div>
+          </div>
+          <div class="secret-proof" id="truthProof">Đây là thật: Tao đang thích Thiệu Gia Bảo 6A5.</div>
+          <div class="truth-page" id="truthPage">
+            <strong>Trang xác nhận</strong><br>
+            Đây là thật: Tao đang thích Thiệu Gia Bảo 6A5.
+          </div>
         </div>
         <div class="actions">
           <button class="button" id="restartBtn">Chơi lại từ đầu</button>
@@ -591,7 +726,7 @@
         difficulty: "Toán học",
         title: "Số nguyên dương nhỏ nhất chia cho 2 dư 1, chia cho 3 dư 2, chia cho 4 dư 3, chia cho 5 dư 4 và chia cho 6 dư 5 là bao nhiêu?",
         body: "Gợi ý: mọi phép chia đều dư đúng 1 đơn vị ít hơn số chia.",
-        options: ["59", "61", "119", "121"],
+        options: ["59", "60", "119", "121"],
         correct: 1
       },
       {
@@ -664,7 +799,13 @@
 
     let currentIndex = 0;
     let bypassUnlocked = false;
+    let firewallCountdownTimer = null;
+    let answerSelectionLocked = false;
     const solved = new Array(questions.length).fill(false);
+
+    questions.forEach((question) => {
+      question.correctText = question.options[question.correct];
+    });
 
     const checklist = document.getElementById("checklist");
     const progressText = document.getElementById("progressText");
@@ -683,9 +824,17 @@
     const passwordBtn = document.getElementById("passwordBtn");
     const keyLink = document.getElementById("keyLink");
     const keyBox = document.getElementById("keyBox");
+    const truthLink = document.getElementById("truthLink");
+    const truthPanel = document.getElementById("truthPanel");
+    const truthInput = document.getElementById("truthInput");
+    const truthBtn = document.getElementById("truthBtn");
+    const truthFeedback = document.getElementById("truthFeedback");
+    const truthProof = document.getElementById("truthProof");
+    const truthPage = document.getElementById("truthPage");
     const passwordFeedback = document.getElementById("passwordFeedback");
     const securityPill = document.getElementById("securityPill");
     const securityLog = document.getElementById("securityLog");
+    const toastStack = document.getElementById("toastStack");
     const firewall = {
       failedPasswordAttempts: 0,
       failedQuizAttempts: 0,
@@ -701,6 +850,17 @@
       securityLog.className = isAlert ? "password-feedback bad" : "password-feedback good";
     }
 
+    function showToast(message, type = "info") {
+      const toast = document.createElement("div");
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      toastStack.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 2600);
+    }
+
     function isFirewallLocked() {
       return Date.now() < firewall.lockedUntil;
     }
@@ -709,11 +869,59 @@
       return Math.max(0, Math.ceil((firewall.lockedUntil - Date.now()) / 1000));
     }
 
-    function resetQuizState() {
+    function stopFirewallCountdown() {
+      if (firewallCountdownTimer) {
+        clearInterval(firewallCountdownTimer);
+        firewallCountdownTimer = null;
+      }
+    }
+
+    function startFirewallCountdown(reason) {
+      stopFirewallCountdown();
+
+      const tick = () => {
+        const secondsLeft = getLockSecondsLeft();
+
+        if (secondsLeft <= 0) {
+          stopFirewallCountdown();
+          setSecurityState("Tường lửa đã mở lại. Bạn có thể chơi tiếp từ câu 1.");
+          feedback.textContent = "Hết thời gian khóa. Bạn có thể bắt đầu lại.";
+          feedback.className = "feedback good";
+          showToast("Tường lửa đã mở lại. Bạn có thể chơi tiếp.", "good");
+          return;
+        }
+
+        setSecurityState(`Tường lửa đang khóa vì ${reason}. Còn ${secondsLeft} giây.`, true);
+        feedback.textContent = `Trang đang bị khóa. Vui lòng chờ ${secondsLeft} giây.`;
+        feedback.className = "feedback bad";
+      };
+
+      tick();
+      firewallCountdownTimer = setInterval(tick, 1000);
+    }
+
+    function shuffleArray(items) {
+      for (let i = items.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+    }
+
+    function shuffleQuestionOptions() {
+      questions.forEach((question) => {
+        shuffleArray(question.options);
+      });
+    }
+
+    function resetQuizState({ shuffle = false } = {}) {
       for (let i = 0; i < solved.length; i += 1) {
         solved[i] = false;
       }
       bypassUnlocked = false;
+      answerSelectionLocked = false;
+      if (shuffle) {
+        shuffleQuestionOptions();
+      }
       currentIndex = 0;
       updateProgress();
       renderQuestion();
@@ -722,6 +930,7 @@
     function engageFirewall(reason, durationMs = 30000) {
       firewall.lockedUntil = Date.now() + durationMs;
       setSecurityState(`Tường lửa đã khóa hệ thống ${Math.ceil(durationMs / 1000)} giây: ${reason}`, true);
+      startFirewallCountdown(reason);
     }
 
     function renderChecklist() {
@@ -756,6 +965,7 @@
 
     function renderQuestion() {
       const q = questions[currentIndex];
+      answerSelectionLocked = false;
       questionIndex.textContent = `Câu ${currentIndex + 1} / ${questions.length}`;
       difficultyLabel.textContent = q.difficulty;
       questionTitle.textContent = q.title;
@@ -782,29 +992,37 @@
     }
 
     function handleAnswer(index) {
+      if (answerSelectionLocked) {
+        return;
+      }
+
       if (isFirewallLocked()) {
         feedback.textContent = `Tường lửa đang khóa truy cập. Chờ ${getLockSecondsLeft()} giây.`;
         feedback.className = "feedback bad";
         return;
       }
 
+      answerSelectionLocked = true;
+
       const q = questions[currentIndex];
       const buttons = [...document.querySelectorAll(".answer")];
+      const selectedOption = q.options[index];
 
       buttons.forEach((button, buttonIndex) => {
         button.disabled = true;
-        if (buttonIndex === q.correct) {
+        if (q.options[buttonIndex] === q.correctText) {
           button.classList.add("correct");
         }
-        if (buttonIndex === index && index !== q.correct) {
+        if (buttonIndex === index && selectedOption !== q.correctText) {
           button.classList.add("wrong");
         }
       });
 
-      if (index === q.correct) {
+      if (selectedOption === q.correctText) {
         solved[currentIndex] = true;
         feedback.textContent = "Chính xác. Hệ thống đang mở khóa tầng tiếp theo...";
         feedback.className = "feedback good";
+        showToast("Trả lời đúng. Đang chuyển sang câu tiếp theo.", "good");
         updateProgress();
 
         if (currentIndex < questions.length - 1) {
@@ -815,19 +1033,21 @@
         }
       } else {
         firewall.failedQuizAttempts += 1;
-        feedback.textContent = "Chưa đúng. Tường lửa đã ghi nhận một lần truy cập sai.";
+        feedback.textContent = "Sai rồi. Hệ thống sẽ quay lại từ câu 1 và xáo trộn đáp án.";
         feedback.className = "feedback bad";
+        showToast("Bạn trả lời sai. Hệ thống đang đặt lại từ đầu.", "bad");
 
         if (firewall.failedQuizAttempts >= 3) {
           firewall.failedQuizAttempts = 0;
-          resetQuizState();
+          resetQuizState({ shuffle: true });
           engageFirewall("quá nhiều lần trả lời sai", 60000);
           feedback.textContent = "Bạn đã sai quá 3 lần. Trang bị khóa 60 giây và đã bắt đầu lại từ câu 1.";
           feedback.className = "feedback bad";
+          showToast("Sai 3 lần liên tiếp. Trang bị khóa 60 giây.", "bad");
         } else {
           setSecurityState(`Phát hiện ${firewall.failedQuizAttempts} lần trả lời sai liên tiếp.`, true);
           setTimeout(() => {
-            renderQuestion();
+            resetQuizState({ shuffle: true });
           }, 900);
         }
       }
@@ -837,14 +1057,21 @@
       resetQuizState();
       bypassUnlocked = false;
       passwordInput.value = "";
+      truthPanel.classList.remove("show");
+      truthInput.value = "";
+      truthFeedback.textContent = "";
+      truthProof.classList.remove("show");
+      truthPage.classList.remove("show");
       passwordFeedback.textContent = "";
       passwordFeedback.className = "password-feedback";
+      showToast("Đã chơi lại từ đầu.", "info");
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
     showAllBtn.addEventListener("click", () => {
       currentIndex = 0;
       renderQuestion();
+      showToast("Đã quay lại xem từ câu đầu tiên.", "info");
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
@@ -852,6 +1079,7 @@
       if (isFirewallLocked()) {
         passwordFeedback.textContent = `Tường lửa đang khóa. Thử lại sau ${getLockSecondsLeft()} giây.`;
         passwordFeedback.className = "password-feedback bad";
+        showToast("Đang bị khóa, chưa thể dùng mật khẩu.", "bad");
         return;
       }
 
@@ -862,12 +1090,14 @@
         passwordFeedback.textContent = "Mật khẩu đúng. Bí mật đã được mở ngay.";
         passwordFeedback.className = "password-feedback good";
         setSecurityState("Xác thực thành công. Tường lửa cho phép truy cập bí mật.");
+        showToast("Mật khẩu đúng. Bí mật đã được mở.", "good");
         updateProgress();
         secretCard.scrollIntoView({ behavior: "smooth", block: "start" });
       } else {
         firewall.failedPasswordAttempts += 1;
         passwordFeedback.textContent = "Mật khẩu chưa đúng.";
         passwordFeedback.className = "password-feedback bad";
+        showToast("Mật khẩu chưa đúng.", "bad");
 
         if (firewall.failedPasswordAttempts >= 5) {
           firewall.failedPasswordAttempts = 0;
@@ -888,11 +1118,49 @@
     keyLink.addEventListener("click", (event) => {
       event.preventDefault();
       keyBox.classList.toggle("show");
+      showToast(keyBox.classList.contains("show") ? "Đã mở thông tin mua key." : "Đã ẩn thông tin mua key.", "info");
+    });
+
+    truthLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      truthPanel.classList.toggle("show");
+      truthFeedback.textContent = "";
+      if (truthPanel.classList.contains("show")) {
+        truthInput.focus();
+        showToast("Đã mở phần nhập mật khẩu xác nhận.", "info");
+      } else {
+        showToast("Đã ẩn phần xác nhận bí mật.", "info");
+      }
+    });
+
+    function verifyTruthPassword() {
+      if (truthInput.value === "AOV_DHjm") {
+        truthProof.classList.add("show");
+        truthPage.classList.add("show");
+        truthFeedback.textContent = "Mật khẩu đúng.";
+        truthFeedback.className = "truth-feedback";
+        showToast("Mật khẩu đúng. Đã mở xác nhận bí mật.", "good");
+        truthPage.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } else {
+        truthProof.classList.remove("show");
+        truthPage.classList.remove("show");
+        truthFeedback.textContent = "Mật khẩu xác nhận chưa đúng.";
+        truthFeedback.className = "truth-feedback";
+        showToast("Mật khẩu xác nhận chưa đúng.", "bad");
+      }
+    }
+
+    truthBtn.addEventListener("click", verifyTruthPassword);
+    truthInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        verifyTruthPassword();
+      }
     });
 
     document.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       setSecurityState("Chuột phải đã bị chặn bởi tường lửa.", true);
+      showToast("Chuột phải đã bị chặn.", "bad");
     });
 
     document.addEventListener("keydown", (event) => {
@@ -908,6 +1176,7 @@
         event.preventDefault();
         setSecurityState("Phát hiện tổ hợp phím bị tường lửa chặn.", true);
         concealSecret("Bí mật đã bị che do phát hiện tổ hợp phím nhạy cảm.");
+        showToast("Tổ hợp phím này đã bị chặn.", "bad");
       }
     });
 
@@ -916,20 +1185,24 @@
         event.preventDefault();
         setSecurityState(`Tường lửa đã chặn thao tác ${eventName}.`, true);
         concealSecret("Bí mật đã bị che do phát hiện thao tác sao chép.");
+        showToast(`Thao tác ${eventName} đã bị chặn.`, "bad");
       });
     });
 
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         concealSecret("Bí mật đã bị che khi trang bị ẩn hoặc chuyển ứng dụng.");
+        showToast("Trang vừa bị ẩn, bí mật đã được che lại.", "info");
       }
     });
 
     window.addEventListener("blur", () => {
       concealSecret("Bí mật đã bị che khi cửa sổ mất focus.");
+      showToast("Cửa sổ mất focus, bí mật đã được che lại.", "info");
     });
 
     setSecurityState("Tường lửa siêu bảo mật đang hoạt động bình thường.");
+    shuffleQuestionOptions();
     updateProgress();
     renderQuestion();
   </script>
