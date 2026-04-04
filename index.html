@@ -297,6 +297,36 @@
       text-decoration: underline;
     }
 
+    .spoiler-button {
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .spoiler-text {
+      display: none;
+      margin-top: 8px;
+      color: #fde68a;
+      font-weight: 700;
+    }
+
+    .spoiler-text.show {
+      display: inline;
+    }
+
+    .troll-line {
+      display: none;
+    }
+
+    .troll-line.show {
+      display: inline;
+    }
+
     .secret-proof {
       display: none;
       margin-top: 12px;
@@ -641,7 +671,7 @@
 
     <main class="panel main">
       <div class="badge">Secret Challenge Interface</div>
-      <h1>Kho Bí Mật Chỉ Mở Với Người Thật Sự Rất Mạnh</h1>
+      <h1>Kho Bí Mật Chỉ Mở Với Người Thật Sự Rất Thông Minh</h1>
       <section class="question-card">
         <div class="question-top">
           <div class="q-index" id="questionIndex">Câu 1 / 10</div>
@@ -666,7 +696,7 @@
         </div>
         <a href="#" class="key-link" id="keyLink">Xem nơi bán key</a>
         <div class="key-box" id="keyBox">
-          Nơi bán key giá: 50.000đ.<br>
+          Nơi bán key giá: 50.000đ<br>
           Nhắn qua Zalo: 0975.497.284
         </div>
         <div class="password-feedback" id="passwordFeedback"></div>
@@ -682,8 +712,9 @@
       <section class="secret-card" id="secretCard">
         <h2 class="secret-title">Bí mật đã được mở</h2>
         <div class="secret-box">
-          Tao đang thích Thiệu Gia Bảo 6A5.<br>
-          Chỉ là troll thôi!
+          Tao đang thích <span class="spoiler-text" id="spoilerText">Thiệu Gia Bảo 6A5</span>
+          <button class="spoiler-button" id="spoilerBtn">Bấm để hiện tên bị che</button><br>
+          <span class="troll-line" id="trollLine">Chỉ là troll thôi!</span>
           <br>
           <a href="#" class="secret-link" id="truthLink">Xem xác nhận bí mật</a>
           <div class="truth-panel" id="truthPanel">
@@ -831,6 +862,9 @@
     const truthFeedback = document.getElementById("truthFeedback");
     const truthProof = document.getElementById("truthProof");
     const truthPage = document.getElementById("truthPage");
+    const spoilerBtn = document.getElementById("spoilerBtn");
+    const spoilerText = document.getElementById("spoilerText");
+    const trollLine = document.getElementById("trollLine");
     const passwordFeedback = document.getElementById("passwordFeedback");
     const securityPill = document.getElementById("securityPill");
     const securityLog = document.getElementById("securityLog");
@@ -951,6 +985,9 @@
 
       if (count === questions.length || bypassUnlocked) {
         secretCard.classList.add("show");
+        if (count === questions.length) {
+          secretCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       } else {
         secretCard.classList.remove("show");
       }
@@ -1062,6 +1099,9 @@
       truthFeedback.textContent = "";
       truthProof.classList.remove("show");
       truthPage.classList.remove("show");
+      spoilerText.classList.remove("show");
+      trollLine.classList.remove("show");
+      spoilerBtn.style.display = "inline-block";
       passwordFeedback.textContent = "";
       passwordFeedback.className = "password-feedback";
       showToast("Đã chơi lại từ đầu.", "info");
@@ -1155,6 +1195,14 @@
       if (event.key === "Enter") {
         verifyTruthPassword();
       }
+    });
+
+    spoilerBtn.addEventListener("click", () => {
+      spoilerText.classList.toggle("show");
+      const isShown = spoilerText.classList.contains("show");
+      trollLine.classList.toggle("show", isShown);
+      spoilerBtn.style.display = isShown ? "none" : "inline-block";
+      showToast(isShown ? "Đã hiện phần tên bị che." : "Đã ẩn lại phần tên.", "info");
     });
 
     document.addEventListener("contextmenu", (event) => {
